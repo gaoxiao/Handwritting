@@ -10,21 +10,23 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import android.widget.Toast;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PIXEL_WIDTH = 28;
     private TextView resText;
-    private int expectNumber=1;
+    private  List<String> expectNumberList = Arrays.asList("0","1","2","3","4","5","6","7","8","9");
+    private String expectNumber="1";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         Random random = new Random();
         // Create imageDir
-        File mypath=new File(directory,expectNumber+"Num"+random.nextInt(1000)+".PNG");
+        File mypath=new File(directory,expectNumber+"Num"+random.nextInt(10000)+".PNG");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
@@ -60,8 +62,18 @@ public class MainActivity extends AppCompatActivity {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Bitmap bmp = pad.getSignatureBitmap();
         saveToInternalStorage(bmp);
+    }
 
-//        try (FileOutputStream out = new FileOutputStream("1.png")) {
+    public void clear(View view) {
+        SignaturePad pad = findViewById(R.id.signature_pad);
+        Random random = new Random();
+        expectNumber=expectNumberList.get(random.nextInt(expectNumberList.size()));
+        resText.setText(String.valueOf("draw "+expectNumber));
+        pad.clear();
+    }
+
+
+    //        try (FileOutputStream out = new FileOutputStream("1.png")) {
 //            bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
 //            Toast.makeText(getApplicationContext(), "Saved.", Toast.LENGTH_SHORT).show();
 //            //init an empty string to fill with the classification output
@@ -84,16 +96,6 @@ public class MainActivity extends AppCompatActivity {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    public void clear(View view) {
-        SignaturePad pad = findViewById(R.id.signature_pad);
-        Random random = new Random();
-        expectNumber=random.nextInt(10);
-        resText.setText(String.valueOf("draw "+expectNumber));
-        pad.clear();
-    }
-
 //    public float[] getPixelData(Bitmap mOffscreenBitmap) {
 //        if (mOffscreenBitmap == null) {
 //            return null;
