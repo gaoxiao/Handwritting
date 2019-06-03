@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PIXEL_WIDTH = 28;
     private TextView resText;
     private  List<String> expectNumberList = Arrays.asList("0","1","2","3","4","5","6","7","8","9");
-    private String expectNumber="1";
+    private String expectNumber=expectNumberList.get(0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
