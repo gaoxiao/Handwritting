@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PIXEL_WIDTH = 28;
@@ -38,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private String saveToInternalStorage(Bitmap bitmapImage){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        Random random = new Random();
+        File directory = cw.getDir("Image"+expectNumber, Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,expectNumber+"Num"+random.nextInt(10000)+".PNG");
+        File mypath=new File(directory,expectNumber+"Num"+ UUID.randomUUID()+".PNG");
+        while(mypath.exists()){
+            mypath=new File(directory,expectNumber+"Num"+UUID.randomUUID()+".PNG");
+        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
