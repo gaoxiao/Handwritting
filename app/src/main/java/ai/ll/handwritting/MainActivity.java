@@ -26,8 +26,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private static final int PIXEL_WIDTH = 28;
     private TextView resText;
-    private  List<String> expectNumberList = Arrays.asList("0","1","2","3","4","5","6","7","8","9","1/2","1/3","1/4","1/5","1/6","1/7","1/8","1/9","1/10","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9");
-    private String expectNumber=expectNumberList.get(0);
+    private String expectNumber="1";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
         File directory = cw.getDir("ImageOf "+fileName, Context.MODE_PRIVATE);
         // Create imageDir
         File mypath=new File(directory,fileName+"Num"+ UUID.randomUUID()+".PNG");
-        while(mypath.exists()){
-            mypath=new File(directory,fileName+"Num"+UUID.randomUUID()+".PNG");
-        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
@@ -71,9 +67,25 @@ public class MainActivity extends AppCompatActivity {
     public void clear(View view) {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Random random = new Random();
-        expectNumber=expectNumberList.get(random.nextInt(expectNumberList.size()));
+        switch(random.nextInt(3)){
+            case 0:
+                expectNumber=""+random.nextInt(10001);
+                break;
+            case 1:
+                expectNumber=""+random.nextInt(101)+"."+random.nextInt(10)+""+random.nextInt(10);
+                break;
+            case 2:
+                long a=(random.nextInt(100)+1);
+                long b=(random.nextInt(99)+2);
+                long gcm=gcm(a,b);
+                expectNumber=""+(a/gcm)+"/"+(b/gcm);
+                break;
+        }
         resText.setText(String.valueOf("draw "+expectNumber));
         pad.clear();
+    }
+    public static long gcm(long a, long b) {
+        return b == 0 ? a : gcm(b, a % b);
     }
 
 
