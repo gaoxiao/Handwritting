@@ -1,5 +1,6 @@
 package ai.ll.handwritting;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -76,10 +77,12 @@ public class MainActivity extends AppCompatActivity {
         clear(view);
     }
 
+    @SuppressLint("DefaultLocale")
     public void clear(View view) {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Random random = new Random();
         int dice = random.nextInt(20);
+        dice = 14;
         if (dice < 5) {
             expectNumber = "" + random.nextInt(10);
         } else if (dice < 7) {
@@ -89,19 +92,20 @@ public class MainActivity extends AppCompatActivity {
         } else if (dice < 11) {
             expectNumber = "" + random.nextInt(1000);
         } else if (dice < 14) {
-            expectNumber = "" + random.nextInt(10) + "." + random.nextInt(10);
+            expectNumber = String.format("%d.%d\n", random.nextInt(10), random.nextInt(10));
         } else if (dice < 15) {
-            expectNumber = "" + random.nextInt(100) + "." + random.nextInt(100);
+            expectNumber = String.format("%d.%02d\n", random.nextInt(100), random.nextInt(100));
         } else if (dice < 18) {
             long a = (random.nextInt(9) + 1);
             long b = (random.nextInt(9) + 1);
             long gcm = gcm(a, b);
-            expectNumber = "" + (a / gcm) + "/" + (b / gcm);
+            expectNumber = String.format("%d/%d\n", a / gcm, b / gcm);
+
         } else if (dice < 20) {
             long a = (random.nextInt(99) + 1);
             long b = (random.nextInt(99) + 1);
             long gcm = gcm(a, b);
-            expectNumber = "" + (a / gcm) + "/" + (b / gcm);
+            expectNumber = String.format("%d/%d\n", a / gcm, b / gcm);
         }
         resText.setText(expectNumber);
         pad.clear();
