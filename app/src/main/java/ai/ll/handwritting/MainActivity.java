@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Random random = new Random();
         int dice = random.nextInt(20);
-        dice = 14;
         if (dice < 5) {
             expectNumber = "" + random.nextInt(10);
         } else if (dice < 7) {
