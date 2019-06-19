@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -131,8 +132,10 @@ public class MainActivity extends AppCompatActivity {
                     mypath.delete();
                 }
                 catch(Exception e)
-                {
+                {   Looper.prepare();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
+                    Looper.loop();
                 }
                 Log.e("result", result);
             }
