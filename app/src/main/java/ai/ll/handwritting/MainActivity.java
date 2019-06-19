@@ -14,6 +14,7 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private File mypath;
     private String filenumber;
     private String result = "";
+    private EditText username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         resText = (TextView) findViewById(R.id.textView);
         resText.setText(String.valueOf("draw " + expectNumber));
+        username = (EditText) findViewById(R.id.EdittextView);
     }
 
     private void saveToInternalStorage(final Bitmap bitmapImage) {
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
 //                  HttpClient client = new DefaultHttpClient(mgr, params);
 //                  HttpPost post = new HttpPost("https://app.gkid.com/gkids/ai/upload/img");
-                   
+
                     int timeoutConnectiion = 3000;
                     int timeoutSocket = 5000;
                     HttpConnectionParams.setConnectionTimeout(params,timeoutConnectiion);
@@ -142,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                     entityBuilder.addTextBody("type", "handwritten");
                     entityBuilder.addTextBody("label", filenumber);
+                    entityBuilder.addTextBody("user", username.getText().toString());
                     entityBuilder.addBinaryBody("img", mypath);
                     HttpEntity entity = entityBuilder.build();
                     post.setEntity(entity);
@@ -166,6 +170,11 @@ public class MainActivity extends AppCompatActivity {
     public void save(View view) {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Bitmap bmp = pad.getSignatureBitmap();
+        if(username.getText().toString().equals("UserName")) {
+            Toast.makeText(getApplicationContext(), "Please Edit Your UserName.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        findViewById(R.id.main_layout).requestFocus();
         saveToInternalStorage(bmp);
         clear(view);
     }
