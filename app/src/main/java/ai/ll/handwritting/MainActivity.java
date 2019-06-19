@@ -88,12 +88,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        Toast.makeText(getApplicationContext(), "Saved.", Toast.LENGTH_SHORT).show();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {   //use another thread to upload file
-
                     SchemeRegistry schemeRegistry = new SchemeRegistry();
                     schemeRegistry.register(new Scheme("https",
                             SSLSocketFactory.getSocketFactory(), 443));
@@ -120,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Looper.loop();
                 }
+                Looper.prepare();
+                Toast.makeText(getApplicationContext(),"Saved.", Toast.LENGTH_SHORT).show();
+                Looper.loop();
                 Log.e("result", result);
             }
         }).start();
