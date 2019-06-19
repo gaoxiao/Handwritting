@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
 //                  HttpClient client = new DefaultHttpClient(mgr, params);
 //                  HttpPost post = new HttpPost("https://app.gkid.com/gkids/ai/upload/img");
-                    HttpGet httpGet = new HttpGet("http://192.168.2.111:9090/gkids/ai/upload/img");
+                   
                     int timeoutConnectiion = 3000;
                     int timeoutSocket = 5000;
                     HttpConnectionParams.setConnectionTimeout(params,timeoutConnectiion);
