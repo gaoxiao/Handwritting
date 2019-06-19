@@ -26,6 +26,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -42,6 +43,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
@@ -129,6 +131,11 @@ public class MainActivity extends AppCompatActivity {
                     SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
 //                  HttpClient client = new DefaultHttpClient(mgr, params);
 //                  HttpPost post = new HttpPost("https://app.gkid.com/gkids/ai/upload/img");
+                    HttpGet httpGet = new HttpGet("http://192.168.2.111:9090/gkids/ai/upload/img");
+                    int timeoutConnectiion = 3000;
+                    int timeoutSocket = 5000;
+                    HttpConnectionParams.setConnectionTimeout(params,timeoutConnectiion);
+                    HttpConnectionParams.setSoTimeout(params,timeoutSocket);
                     HttpClient client = new DefaultHttpClient();
                     HttpPost post = new HttpPost("http://192.168.2.111:9090/gkids/ai/upload/img");
                     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
