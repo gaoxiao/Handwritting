@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
         // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("saved_data", Context.MODE_PRIVATE);
+        File directory = cw.getDir("saved_data ", Context.MODE_PRIVATE);
         // Create imageDir
         String filename=UUID.randomUUID() + ".png";
         mypath = new File(directory, filename);
