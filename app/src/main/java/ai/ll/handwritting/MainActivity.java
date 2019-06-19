@@ -27,6 +27,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -36,7 +39,10 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap emptyBmp = null;
     private File mypath;
     private String filenumber;
-    private String result="";
+    private String result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("saved_data ", Context.MODE_PRIVATE);
         // Create imageDir
-        String filename=UUID.randomUUID() + ".png";
+        String filename = UUID.randomUUID() + ".png";
         mypath = new File(directory, filename);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            filenumber=expectNumber;
+            filenumber = expectNumber;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -112,17 +118,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         Toast.makeText(getApplicationContext(), "Saved.", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable(){
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                try
-                {   //use another thread to upload file
+                try {   //use another thread to upload file
+
+                    SchemeRegistry schemeRegistry = new SchemeRegistry();
+                    schemeRegistry.register(new Scheme("https",
+                            SSLSocketFactory.getSocketFactory(), 443));
+                    HttpParams params = new BasicHttpParams();
+                    SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
+//                  HttpClient client = new DefaultHttpClient(mgr, params);
+//                  HttpPost post = new HttpPost("https://app.gkid.com/gkids/ai/upload/img");
                     HttpClient client = new DefaultHttpClient();
                     HttpPost post = new HttpPost("http://192.168.2.111:9090/gkids/ai/upload/img");
                     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
                     entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                     entityBuilder.addTextBody("type", "handwritten");
-                    entityBuilder.addTextBody("label",filenumber);
+                    entityBuilder.addTextBody("label", filenumber);
                     entityBuilder.addBinaryBody("img", mypath);
                     HttpEntity entity = entityBuilder.build();
                     post.setEntity(entity);
@@ -130,9 +143,8 @@ public class MainActivity extends AppCompatActivity {
                     HttpEntity httpEntity = response.getEntity();
                     result = EntityUtils.toString(httpEntity);
                     mypath.delete();
-                }
-                catch(Exception e)
-                {   Looper.prepare();
+                } catch (Exception e) {
+                    Looper.prepare();
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                     Looper.loop();
@@ -155,8 +167,6 @@ public class MainActivity extends AppCompatActivity {
         resText.setText(expectNumber);
         pad.clear();
     }
-
-
 
 
     private String getRandomEquation() {
