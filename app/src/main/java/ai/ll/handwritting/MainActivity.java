@@ -174,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please Edit Your UserName.", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(username.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), "UserName can not be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
         findViewById(R.id.main_layout).requestFocus();
         saveToInternalStorage(bmp);
         clear(view);
