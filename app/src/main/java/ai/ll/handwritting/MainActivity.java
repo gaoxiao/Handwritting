@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     HttpResponse response = client.execute(post);
                     HttpEntity httpEntity = response.getEntity();
                     result = EntityUtils.toString(httpEntity);
-                    mypath.delete();
                 } catch (Exception e) {
                     Looper.prepare();
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -138,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Saved.", Toast.LENGTH_SHORT).show();
                 Looper.loop();
                 Log.e("result", result);
+                mypath.delete();
             }
         }).start();
     }
