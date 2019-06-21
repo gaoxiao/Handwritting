@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,11 @@ import com.github.gcacace.signaturepad.views.SignaturePad;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+<<<<<<< HEAD
+=======
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+>>>>>>> fd235ee30378ef020fc4e73282c265ec4153d91d
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -27,6 +33,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private File mypath;
     private String filenumber;
     private String result = "";
+    private EditText username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         resText = (TextView) findViewById(R.id.textView);
         resText.setText(String.valueOf("draw " + expectNumber));
+        username = (EditText) findViewById(R.id.EdittextView);
     }
 
     private void saveToInternalStorage(final Bitmap bitmapImage) {
@@ -100,12 +109,18 @@ public class MainActivity extends AppCompatActivity {
                     SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
 //                  HttpClient client = new DefaultHttpClient(mgr, params);
 //                  HttpPost post = new HttpPost("https://app.gkid.com/gkids/ai/upload/img");
+
+                    int timeoutConnectiion = 3000;
+                    int timeoutSocket = 5000;
+                    HttpConnectionParams.setConnectionTimeout(params,timeoutConnectiion);
+                    HttpConnectionParams.setSoTimeout(params,timeoutSocket);
                     HttpClient client = new DefaultHttpClient();
                     HttpPost post = new HttpPost("http://192.168.2.111:9090/gkids/ai/upload/img");
                     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
                     entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                     entityBuilder.addTextBody("type", "handwritten");
                     entityBuilder.addTextBody("label", filenumber);
+                    entityBuilder.addTextBody("user", username.getText().toString());
                     entityBuilder.addBinaryBody("img", mypath);
                     HttpEntity entity = entityBuilder.build();
                     post.setEntity(entity);
@@ -130,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
     public void save(View view) {
         SignaturePad pad = findViewById(R.id.signature_pad);
         Bitmap bmp = pad.getSignatureBitmap();
+        if(username.getText().toString().equals("UserName")) {
+            Toast.makeText(getApplicationContext(), "Please Edit Your UserName.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(username.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), "UserName can not be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        findViewById(R.id.main_layout).requestFocus();
         saveToInternalStorage(bmp);
         clear(view);
     }
