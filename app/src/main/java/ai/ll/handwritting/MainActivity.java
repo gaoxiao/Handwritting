@@ -19,11 +19,6 @@ import com.github.gcacace.signaturepad.views.SignaturePad;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-<<<<<<< HEAD
-=======
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
->>>>>>> fd235ee30378ef020fc4e73282c265ec4153d91d
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -115,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     HttpConnectionParams.setConnectionTimeout(params,timeoutConnectiion);
                     HttpConnectionParams.setSoTimeout(params,timeoutSocket);
                     HttpClient client = new DefaultHttpClient();
-                    HttpPost post = new HttpPost("http://192.168.2.111:9090/gkids/ai/upload/img");
+//                    HttpPost post = new HttpPost("http://192.168.2.111:9090/gkids/ai/upload/img");
+                    HttpPost post = new HttpPost("http://192.168.1.188:9090/gkids/ai/upload/img");
                     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
                     entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                     entityBuilder.addTextBody("type", "handwritten");
